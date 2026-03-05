@@ -27,12 +27,22 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Build Release APK
+      - name: Build Release APK (unsigned)
+        run: flutter build apk --release
+
+      - name: Sign APK
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-        run: flutter build apk --release
+        run: |
+          $ANDROID_HOME/build-tools/34.0.0/apksigner sign \
+            --ks android/app/mathkids_adventure.keystore \
+            --ks-pass "pass:$KEYSTORE_PASSWORD" \
+            --key-pass "pass:$KEY_PASSWORD" \
+            --ks-key-alias $KEY_ALIAS \
+            --out build/app/outputs/flutter-apk/app-release.apk \
+            build/app/outputs/flutter-apk/app-release.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
