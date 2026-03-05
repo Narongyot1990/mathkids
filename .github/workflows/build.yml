@@ -36,13 +36,14 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
-          $ANDROID_HOME/build-tools/34.0.0/apksigner sign \
-            --ks android/app/mathkids_adventure.keystore \
+          cd android/app
+          "$ANDROID_HOME/build-tools/34.0.0/apksigner" sign \
+            --ks mathkids_adventure.keystore \
             --ks-pass "pass:$KEYSTORE_PASSWORD" \
             --key-pass "pass:$KEY_PASSWORD" \
-            --ks-key-alias $KEY_ALIAS \
-            --out build/app/outputs/flutter-apk/app-release.apk \
-            build/app/outputs/flutter-apk/app-release.apk
+            --ks-key-alias "$KEY_ALIAS" \
+            --out ../build/app/outputs/flutter-apk/app-release.apk \
+            ../build/app/outputs/flutter-apk/app-release.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
