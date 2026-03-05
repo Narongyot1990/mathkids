@@ -32,12 +32,7 @@ jobs:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-        run: |
-          echo "keystoreFile=android/app/mathkids_adventure.keystore" >> gradle.properties
-          echo "keystorePassword=$KEYSTORE_PASSWORD" >> gradle.properties
-          echo "keyAlias=$KEY_ALIAS" >> gradle.properties
-          echo "keyPassword=$KEY_PASSWORD" >> gradle.properties
-          flutter build apk --release
+        run: flutter build apk --release
 
       - name: Upload APK
         uses: actions/upload-artifact@v4

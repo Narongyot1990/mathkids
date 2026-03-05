@@ -28,11 +28,10 @@ android {
 
     signingConfigs {
         create("release") {
-            val keystoreFile = project.property("keystoreFile") as String
-            storeFile = file(keystoreFile)
-            storePassword = project.property("keystorePassword") as String
-            keyAlias = project.property("keyAlias") as String
-            keyPassword = project.property("keyPassword") as String
+            storeFile = file("android/app/mathkids_adventure.keystore")
+            storePassword = System.getenv("KEYSTORE_PASSWORD") ?: "mathkids123"
+            keyAlias = System.getenv("KEY_ALIAS") ?: "mathkidskey"
+            keyPassword = System.getenv("KEY_PASSWORD") ?: "mathkids123"
         }
     }
 
