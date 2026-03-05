@@ -1,0 +1,787 @@
+/// Comparison Question Bank - คลังคำถามเกมเปรียบเทียบ (สำหรับเด็ก 4-6 ขวบ)
+///
+/// โครงสร้าง: 5 stages × 10 questions = 50 คำถาม
+/// - Stage 1: เปรียบเทียบเลข 1-2 (อายุ 4 ขวบ)
+/// - Stage 2: เปรียบเทียบเลข 2-3 (อายุ 4-5 ขวบ)
+/// - Stage 3: เปรียบเทียบเลข 3-4 (อายุ 5 ขวบ)
+/// - Stage 4: เปรียบเทียบเลข 4-5 (อายุ 5-6 ขวบ)
+/// - Stage 5: เปรียบเทียบเลข 5-6 (อายุ 6 ขวบ, ยากสุด)
+///
+/// หมายเหตุ: Emoji จะถูกดึงจาก ComparisonPainter โดยอัตโนมัติ
+/// คำตอบ: 0 = น้อยกว่า (<), 1 = เท่ากับ (=), 2 = มากกว่า (>)
+library;
+
+import 'question_config.dart';
+
+class ComparisonQuestions {
+  ComparisonQuestions._();
+
+  /// คลังคำถามทั้งหมด - 5 stages × 10 questions = 50 คำถาม
+  /// คำตอบ: 0 = <, 1 = =, 2 = >
+  static const List<QuestionTemplate> bank = [
+    // ========================================
+    // Stage 1: เปรียบเทียบ 1-2 (ง่ายสุด) - อายุ 4 ขวบ
+    // ========================================
+    QuestionTemplate(
+      level: 1,
+      recommendedAge: 4,
+      question: 'ข้างไหนมีมากกว่า?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 0,  // ซ้าย < ขวา
+      wrongAnswers: [1, 2],
+      data: QuestionData(
+        leftCount: 1,
+        rightCount: 2,
+        comparisonType: 'moreOrLess',
+      ),
+      hint: 'นับทีละข้างแล้วเปรียบเทียบ',
+      encouragement: 'เก่งมาก! น้องเปรียบเทียบได้ถูกต้อง! 🎉',
+    ),
+    QuestionTemplate(
+      level: 1,
+      recommendedAge: 4,
+      question: 'ข้างไหนมีมากกว่า?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 2,  // ซ้าย > ขวา
+      wrongAnswers: [0, 1],
+      data: QuestionData(
+        leftCount: 2,
+        rightCount: 1,
+        comparisonType: 'moreOrLess',
+      ),
+      hint: 'ซ้ายมีเยอะกว่าใช่ไหม?',
+      encouragement: 'เยี่ยมเลย! น้องดูออกว่าข้างไหนเยอะกว่า! 👏',
+    ),
+    QuestionTemplate(
+      level: 1,
+      recommendedAge: 4,
+      question: 'ทั้งสองข้างเท่ากันไหม?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 1,  // เท่ากัน
+      wrongAnswers: [0, 2],
+      data: QuestionData(
+        leftCount: 1,
+        rightCount: 1,
+        comparisonType: 'equal',
+      ),
+      hint: 'ถ้าเท่ากันให้เลือก "="',
+      encouragement: 'ว้าว! น้องสังเกตเห็นว่าเท่ากันเลย! 🎊',
+    ),
+    QuestionTemplate(
+      level: 1,
+      recommendedAge: 4,
+      question: 'ข้างไหนมีมากกว่า?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 0,  // ซ้าย < ขวา
+      wrongAnswers: [1, 2],
+      data: QuestionData(
+        leftCount: 1,
+        rightCount: 2,
+        comparisonType: 'moreOrLess',
+      ),
+      encouragement: 'เก่งจัง! น้องเปรียบเทียบได้! 🌟',
+    ),
+    QuestionTemplate(
+      level: 1,
+      recommendedAge: 4,
+      question: 'ข้างไหนมีมากกว่า?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 2,  // ซ้าย > ขวา
+      wrongAnswers: [0, 1],
+      data: QuestionData(
+        leftCount: 2,
+        rightCount: 1,
+        comparisonType: 'moreOrLess',
+      ),
+      encouragement: 'ดีมาก! น้องนับได้ถูก! ⭐',
+    ),
+    QuestionTemplate(
+      level: 1,
+      recommendedAge: 4,
+      question: 'ทั้งสองข้างเท่ากันไหม?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 1,  // เท่ากัน
+      wrongAnswers: [0, 2],
+      data: QuestionData(
+        leftCount: 2,
+        rightCount: 2,
+        comparisonType: 'equal',
+      ),
+      hint: 'นับดูทั้งสองข้าง',
+      encouragement: 'สุดยอด! น้องเห็นว่าเท่ากัน! 🎈',
+    ),
+    QuestionTemplate(
+      level: 1,
+      recommendedAge: 4,
+      question: 'ข้างไหนน้อยกว่า?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 0,  // ซ้าย < ขวา
+      wrongAnswers: [1, 2],
+      data: QuestionData(
+        leftCount: 1,
+        rightCount: 2,
+        comparisonType: 'lessOrMore',
+      ),
+      hint: 'ข้างไหนมีน้อยกว่ากัน?',
+      encouragement: 'เยี่ยมเลย! น้องหาข้างน้อยได้! 🎯',
+    ),
+    QuestionTemplate(
+      level: 1,
+      recommendedAge: 4,
+      question: 'ข้างไหนน้อยกว่า?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 2,  // ซ้าย > ขวา (ขวาน้อยกว่า)
+      wrongAnswers: [0, 1],
+      data: QuestionData(
+        leftCount: 2,
+        rightCount: 1,
+        comparisonType: 'lessOrMore',
+      ),
+      encouragement: 'เก่งมาก! น้องคิดได้ถูก! 💪',
+    ),
+    QuestionTemplate(
+      level: 1,
+      recommendedAge: 4,
+      question: 'ข้างไหนมีมากกว่า?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 0,  // ซ้าย < ขวา
+      wrongAnswers: [1, 2],
+      data: QuestionData(
+        leftCount: 1,
+        rightCount: 2,
+        comparisonType: 'moreOrLess',
+      ),
+      encouragement: 'ยอดเยี่ยม! น้องเปรียบเทียบเก่ง! ✨',
+    ),
+    QuestionTemplate(
+      level: 1,
+      recommendedAge: 4,
+      question: 'ทั้งสองข้างเท่ากันไหม?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 1,  // เท่ากัน
+      wrongAnswers: [0, 2],
+      data: QuestionData(
+        leftCount: 1,
+        rightCount: 1,
+        comparisonType: 'equal',
+      ),
+      encouragement: 'เจ๋งมาก! น้องสังเกตดี! 🎁',
+    ),
+
+    // ========================================
+    // Stage 2: เปรียบเทียบ 2-3 - อายุ 4-5 ขวบ
+    // ========================================
+    QuestionTemplate(
+      level: 2,
+      recommendedAge: 4,
+      question: 'ข้างไหนมีมากกว่า?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 0,  // ซ้าย < ขวา
+      wrongAnswers: [1, 2],
+      data: QuestionData(
+        leftCount: 2,
+        rightCount: 3,
+        comparisonType: 'moreOrLess',
+      ),
+      hint: 'นับทั้งสองข้างแล้วดูว่าข้างไหนเยอะกว่า',
+      encouragement: 'เก่งมาก! น้องนับและเปรียบเทียบได้ถูก! 🎉',
+    ),
+    QuestionTemplate(
+      level: 2,
+      recommendedAge: 4,
+      question: 'ข้างไหนมีมากกว่า?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 2,  // ซ้าย > ขวา
+      wrongAnswers: [0, 1],
+      data: QuestionData(
+        leftCount: 3,
+        rightCount: 2,
+        comparisonType: 'moreOrLess',
+      ),
+      hint: 'ซ้าย 3, ขวา 2',
+      encouragement: 'สุดยอด! น้องเปรียบเทียบได้แม่น! 🌟',
+    ),
+    QuestionTemplate(
+      level: 2,
+      recommendedAge: 5,
+      question: 'ทั้งสองข้างเท่ากันไหม?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 1,  // เท่ากัน
+      wrongAnswers: [0, 2],
+      data: QuestionData(
+        leftCount: 2,
+        rightCount: 2,
+        comparisonType: 'equal',
+      ),
+      hint: 'ลองนับดูสิ เท่ากันหรือไม่?',
+      encouragement: 'เยี่ยมเลย! น้องเห็นว่าเท่ากันเลย! 👏',
+    ),
+    QuestionTemplate(
+      level: 2,
+      recommendedAge: 5,
+      question: 'ข้างไหนน้อยกว่า?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 0,  // ซ้าย < ขวา
+      wrongAnswers: [1, 2],
+      data: QuestionData(
+        leftCount: 2,
+        rightCount: 3,
+        comparisonType: 'lessOrMore',
+      ),
+      hint: 'ข้างไหนมีจำนวนน้อยกว่า?',
+      encouragement: 'ดีมาก! น้องหาข้างน้อยได้! 🎊',
+    ),
+    QuestionTemplate(
+      level: 2,
+      recommendedAge: 5,
+      question: 'ข้างไหนน้อยกว่า?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 2,  // ซ้าย > ขวา (ขวาน้อยกว่า)
+      wrongAnswers: [0, 1],
+      data: QuestionData(
+        leftCount: 3,
+        rightCount: 2,
+        comparisonType: 'lessOrMore',
+      ),
+      encouragement: 'เก่งจัง! น้องคิดได้ถูก! 💪',
+    ),
+    QuestionTemplate(
+      level: 2,
+      recommendedAge: 5,
+      question: 'ทั้งสองข้างเท่ากันไหม?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 1,  // เท่ากัน
+      wrongAnswers: [0, 2],
+      data: QuestionData(
+        leftCount: 3,
+        rightCount: 3,
+        comparisonType: 'equal',
+      ),
+      encouragement: 'ว้าว! น้องสังเกตดีเลย! 🎈',
+    ),
+    QuestionTemplate(
+      level: 2,
+      recommendedAge: 5,
+      question: 'ข้างไหนมีมากกว่า?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 0,  // ซ้าย < ขวา
+      wrongAnswers: [1, 2],
+      data: QuestionData(
+        leftCount: 2,
+        rightCount: 3,
+        comparisonType: 'moreOrLess',
+      ),
+      hint: 'นับช้าๆ ทั้งสองข้าง',
+      encouragement: 'ยอดเยี่ยม! น้องนับได้ถูก! ⭐',
+    ),
+    QuestionTemplate(
+      level: 2,
+      recommendedAge: 5,
+      question: 'ข้างไหนมีมากกว่า?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 2,  // ซ้าย > ขวา
+      wrongAnswers: [0, 1],
+      data: QuestionData(
+        leftCount: 3,
+        rightCount: 2,
+        comparisonType: 'moreOrLess',
+      ),
+      encouragement: 'เจ๋งมาก! น้องเปรียบเทียบเก่ง! 🎯',
+    ),
+    QuestionTemplate(
+      level: 2,
+      recommendedAge: 5,
+      question: 'ข้างไหนมีมากกว่า?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 0,  // ซ้าย < ขวา
+      wrongAnswers: [1, 2],
+      data: QuestionData(
+        leftCount: 2,
+        rightCount: 3,
+        comparisonType: 'moreOrLess',
+      ),
+      encouragement: 'สุดยอด! น้องคิดได้ไว! ✨',
+    ),
+    QuestionTemplate(
+      level: 2,
+      recommendedAge: 5,
+      question: 'ทั้งสองข้างเท่ากันไหม?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 1,  // เท่ากัน
+      wrongAnswers: [0, 2],
+      data: QuestionData(
+        leftCount: 2,
+        rightCount: 2,
+        comparisonType: 'equal',
+      ),
+      encouragement: 'เยี่ยมเลย! น้องสังเกตเก่ง! 🎁',
+    ),
+
+    // ========================================
+    // Stage 3: เปรียบเทียบ 3-4 - อายุ 5 ขวบ
+    // ========================================
+    QuestionTemplate(
+      level: 3,
+      recommendedAge: 5,
+      question: 'ข้างไหนมีมากกว่า?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 0,  // ซ้าย < ขวา
+      wrongAnswers: [1, 2],
+      data: QuestionData(
+        leftCount: 3,
+        rightCount: 4,
+        comparisonType: 'moreOrLess',
+      ),
+      hint: 'ข้างซ้าย 3, ข้างขวา 4',
+      encouragement: 'เก่งมาก! น้องเปรียบเทียบได้ถูก! 🎉',
+    ),
+    QuestionTemplate(
+      level: 3,
+      recommendedAge: 5,
+      question: 'ข้างไหนมีมากกว่า?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 2,  // ซ้าย > ขวา
+      wrongAnswers: [0, 1],
+      data: QuestionData(
+        leftCount: 4,
+        rightCount: 3,
+        comparisonType: 'moreOrLess',
+      ),
+      hint: 'ซ้าย 4, ขวา 3',
+      encouragement: 'ยอดเยี่ยม! น้องคิดได้ถูกต้อง! 🌟',
+    ),
+    QuestionTemplate(
+      level: 3,
+      recommendedAge: 5,
+      question: 'ทั้งสองข้างเท่ากันไหม?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 1,  // เท่ากัน
+      wrongAnswers: [0, 2],
+      data: QuestionData(
+        leftCount: 3,
+        rightCount: 3,
+        comparisonType: 'equal',
+      ),
+      hint: 'นับดูทั้งสองข้าง',
+      encouragement: 'เยี่ยมเลย! น้องเห็นว่าเท่ากัน! 👏',
+    ),
+    QuestionTemplate(
+      level: 3,
+      recommendedAge: 5,
+      question: 'ข้างไหนน้อยกว่า?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 0,  // ซ้าย < ขวา
+      wrongAnswers: [1, 2],
+      data: QuestionData(
+        leftCount: 3,
+        rightCount: 4,
+        comparisonType: 'lessOrMore',
+      ),
+      hint: 'ข้างไหนมีน้อยกว่ากัน?',
+      encouragement: 'ดีมาก! น้องหาข้างน้อยได้! 🎊',
+    ),
+    QuestionTemplate(
+      level: 3,
+      recommendedAge: 5,
+      question: 'ข้างไหนน้อยกว่า?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 2,  // ซ้าย > ขวา (ขวาน้อยกว่า)
+      wrongAnswers: [0, 1],
+      data: QuestionData(
+        leftCount: 4,
+        rightCount: 3,
+        comparisonType: 'lessOrMore',
+      ),
+      encouragement: 'สุดยอด! น้องคิดได้ถูก! 💪',
+    ),
+    QuestionTemplate(
+      level: 3,
+      recommendedAge: 5,
+      question: 'ทั้งสองข้างเท่ากันไหม?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 1,  // เท่ากัน
+      wrongAnswers: [0, 2],
+      data: QuestionData(
+        leftCount: 4,
+        rightCount: 4,
+        comparisonType: 'equal',
+      ),
+      hint: 'นับช้าๆ ทั้งสองข้าง',
+      encouragement: 'ว้าว! น้องสังเกตดีเลย! 🎈',
+    ),
+    QuestionTemplate(
+      level: 3,
+      recommendedAge: 5,
+      question: 'ข้างไหนมีมากกว่า?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 0,  // ซ้าย < ขวา
+      wrongAnswers: [1, 2],
+      data: QuestionData(
+        leftCount: 3,
+        rightCount: 4,
+        comparisonType: 'moreOrLess',
+      ),
+      encouragement: 'เก่งจัง! น้องนับได้แม่น! ⭐',
+    ),
+    QuestionTemplate(
+      level: 3,
+      recommendedAge: 5,
+      question: 'ข้างไหนมีมากกว่า?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 2,  // ซ้าย > ขวา
+      wrongAnswers: [0, 1],
+      data: QuestionData(
+        leftCount: 4,
+        rightCount: 3,
+        comparisonType: 'moreOrLess',
+      ),
+      encouragement: 'เจ๋งมาก! น้องเปรียบเทียบเก่ง! 🎯',
+    ),
+    QuestionTemplate(
+      level: 3,
+      recommendedAge: 5,
+      question: 'ข้างไหนมีมากกว่า?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 0,  // ซ้าย < ขวา
+      wrongAnswers: [1, 2],
+      data: QuestionData(
+        leftCount: 3,
+        rightCount: 4,
+        comparisonType: 'moreOrLess',
+      ),
+      encouragement: 'ยอดเยี่ยม! น้องคิดได้ไว! ✨',
+    ),
+    QuestionTemplate(
+      level: 3,
+      recommendedAge: 5,
+      question: 'ทั้งสองข้างเท่ากันไหม?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 1,  // เท่ากัน
+      wrongAnswers: [0, 2],
+      data: QuestionData(
+        leftCount: 3,
+        rightCount: 3,
+        comparisonType: 'equal',
+      ),
+      encouragement: 'เยี่ยมเลย! น้องสังเกตเก่ง! 🎁',
+    ),
+
+    // ========================================
+    // Stage 4: เปรียบเทียบ 4-5 - อายุ 5-6 ขวบ
+    // ========================================
+    QuestionTemplate(
+      level: 4,
+      recommendedAge: 6,
+      question: 'ข้างไหนมีมากกว่า?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 0,  // ซ้าย < ขวา
+      wrongAnswers: [1, 2],
+      data: QuestionData(
+        leftCount: 4,
+        rightCount: 5,
+        comparisonType: 'moreOrLess',
+      ),
+      hint: 'ข้างซ้าย 4, ข้างขวา 5',
+      encouragement: 'เก่งมาก! น้องเปรียบเทียบได้แม่น! 🎉',
+    ),
+    QuestionTemplate(
+      level: 4,
+      recommendedAge: 6,
+      question: 'ข้างไหนมีมากกว่า?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 2,  // ซ้าย > ขวา
+      wrongAnswers: [0, 1],
+      data: QuestionData(
+        leftCount: 5,
+        rightCount: 4,
+        comparisonType: 'moreOrLess',
+      ),
+      hint: 'ซ้าย 5, ขวา 4',
+      encouragement: 'สุดยอด! น้องคิดได้ถูก! 🌟',
+    ),
+    QuestionTemplate(
+      level: 4,
+      recommendedAge: 6,
+      question: 'ทั้งสองข้างเท่ากันไหม?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 1,  // เท่ากัน
+      wrongAnswers: [0, 2],
+      data: QuestionData(
+        leftCount: 4,
+        rightCount: 4,
+        comparisonType: 'equal',
+      ),
+      hint: 'นับดูทั้งสองข้าง',
+      encouragement: 'เยี่ยมเลย! น้องเห็นว่าเท่ากัน! 👏',
+    ),
+    QuestionTemplate(
+      level: 4,
+      recommendedAge: 6,
+      question: 'ข้างไหนน้อยกว่า?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 0,  // ซ้าย < ขวา
+      wrongAnswers: [1, 2],
+      data: QuestionData(
+        leftCount: 4,
+        rightCount: 5,
+        comparisonType: 'lessOrMore',
+      ),
+      hint: 'ข้างไหนมีจำนวนน้อยกว่า?',
+      encouragement: 'ดีมาก! น้องหาข้างน้อยได้! 🎊',
+    ),
+    QuestionTemplate(
+      level: 4,
+      recommendedAge: 6,
+      question: 'ข้างไหนน้อยกว่า?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 2,  // ซ้าย > ขวา (ขวาน้อยกว่า)
+      wrongAnswers: [0, 1],
+      data: QuestionData(
+        leftCount: 5,
+        rightCount: 4,
+        comparisonType: 'lessOrMore',
+      ),
+      encouragement: 'เก่งจัง! น้องคิดได้ถูก! 💪',
+    ),
+    QuestionTemplate(
+      level: 4,
+      recommendedAge: 6,
+      question: 'ทั้งสองข้างเท่ากันไหม?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 1,  // เท่ากัน
+      wrongAnswers: [0, 2],
+      data: QuestionData(
+        leftCount: 5,
+        rightCount: 5,
+        comparisonType: 'equal',
+      ),
+      hint: 'นับช้าๆ ทั้งสองข้าง',
+      encouragement: 'ว้าว! น้องสังเกตดีเลย! 🎈',
+    ),
+    QuestionTemplate(
+      level: 4,
+      recommendedAge: 6,
+      question: 'ข้างไหนมีมากกว่า?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 0,  // ซ้าย < ขวา
+      wrongAnswers: [1, 2],
+      data: QuestionData(
+        leftCount: 4,
+        rightCount: 5,
+        comparisonType: 'moreOrLess',
+      ),
+      encouragement: 'ยอดเยี่ยม! น้องนับได้แม่น! ⭐',
+    ),
+    QuestionTemplate(
+      level: 4,
+      recommendedAge: 6,
+      question: 'ข้างไหนมีมากกว่า?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 2,  // ซ้าย > ขวา
+      wrongAnswers: [0, 1],
+      data: QuestionData(
+        leftCount: 5,
+        rightCount: 4,
+        comparisonType: 'moreOrLess',
+      ),
+      encouragement: 'เจ๋งมาก! น้องเปรียบเทียบเก่ง! 🎯',
+    ),
+    QuestionTemplate(
+      level: 4,
+      recommendedAge: 6,
+      question: 'ข้างไหนมีมากกว่า?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 0,  // ซ้าย < ขวา
+      wrongAnswers: [1, 2],
+      data: QuestionData(
+        leftCount: 4,
+        rightCount: 5,
+        comparisonType: 'moreOrLess',
+      ),
+      encouragement: 'สุดยอด! น้องคิดได้ไว! ✨',
+    ),
+    QuestionTemplate(
+      level: 4,
+      recommendedAge: 6,
+      question: 'ทั้งสองข้างเท่ากันไหม?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 1,  // เท่ากัน
+      wrongAnswers: [0, 2],
+      data: QuestionData(
+        leftCount: 4,
+        rightCount: 4,
+        comparisonType: 'equal',
+      ),
+      encouragement: 'เยี่ยมเลย! น้องสังเกตเก่ง! 🎁',
+    ),
+
+    // ========================================
+    // Stage 5: เปรียบเทียบ 5-6 (ยากสุด) - อายุ 6 ขวบ
+    // ========================================
+    QuestionTemplate(
+      level: 5,
+      recommendedAge: 6,
+      question: 'ข้างไหนมีมากกว่า?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 0,  // ซ้าย < ขวา
+      wrongAnswers: [1, 2],
+      data: QuestionData(
+        leftCount: 5,
+        rightCount: 6,
+        comparisonType: 'moreOrLess',
+      ),
+      hint: 'ข้างซ้าย 5, ข้างขวา 6',
+      encouragement: 'เก่งมาก! น้องเปรียบเทียบได้แม่นเป๊ะ! 🎉',
+    ),
+    QuestionTemplate(
+      level: 5,
+      recommendedAge: 6,
+      question: 'ข้างไหนมีมากกว่า?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 2,  // ซ้าย > ขวา
+      wrongAnswers: [0, 1],
+      data: QuestionData(
+        leftCount: 6,
+        rightCount: 5,
+        comparisonType: 'moreOrLess',
+      ),
+      hint: 'ซ้าย 6, ขวา 5',
+      encouragement: 'ยอดเยี่ยม! น้องคิดได้ถูกต้อง! 🌟',
+    ),
+    QuestionTemplate(
+      level: 5,
+      recommendedAge: 6,
+      question: 'ทั้งสองข้างเท่ากันไหม?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 1,  // เท่ากัน
+      wrongAnswers: [0, 2],
+      data: QuestionData(
+        leftCount: 5,
+        rightCount: 5,
+        comparisonType: 'equal',
+      ),
+      hint: 'นับดูทั้งสองข้าง',
+      encouragement: 'เยี่ยมเลย! น้องเห็นว่าเท่ากัน! 👏',
+    ),
+    QuestionTemplate(
+      level: 5,
+      recommendedAge: 6,
+      question: 'ข้างไหนน้อยกว่า?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 0,  // ซ้าย < ขวา
+      wrongAnswers: [1, 2],
+      data: QuestionData(
+        leftCount: 5,
+        rightCount: 6,
+        comparisonType: 'lessOrMore',
+      ),
+      hint: 'ข้างไหนมีน้อยกว่ากัน?',
+      encouragement: 'ดีมาก! น้องหาข้างน้อยได้! 🎊',
+    ),
+    QuestionTemplate(
+      level: 5,
+      recommendedAge: 6,
+      question: 'ข้างไหนน้อยกว่า?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 2,  // ซ้าย > ขวา (ขวาน้อยกว่า)
+      wrongAnswers: [0, 1],
+      data: QuestionData(
+        leftCount: 6,
+        rightCount: 5,
+        comparisonType: 'lessOrMore',
+      ),
+      encouragement: 'สุดยอด! น้องคิดได้ถูก! 💪',
+    ),
+    QuestionTemplate(
+      level: 5,
+      recommendedAge: 6,
+      question: 'ทั้งสองข้างเท่ากันไหม?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 1,  // เท่ากัน
+      wrongAnswers: [0, 2],
+      data: QuestionData(
+        leftCount: 6,
+        rightCount: 6,
+        comparisonType: 'equal',
+      ),
+      hint: 'นับช้าๆ ทั้งสองข้าง',
+      encouragement: 'ว้าว! น้องสังเกตดีเลย! 🎈',
+    ),
+    QuestionTemplate(
+      level: 5,
+      recommendedAge: 6,
+      question: 'ข้างไหนมีมากกว่า?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 0,  // ซ้าย < ขวา
+      wrongAnswers: [1, 2],
+      data: QuestionData(
+        leftCount: 5,
+        rightCount: 6,
+        comparisonType: 'moreOrLess',
+      ),
+      encouragement: 'เก่งจัง! น้องนับได้แม่น! ⭐',
+    ),
+    QuestionTemplate(
+      level: 5,
+      recommendedAge: 6,
+      question: 'ข้างไหนมีมากกว่า?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 2,  // ซ้าย > ขวา
+      wrongAnswers: [0, 1],
+      data: QuestionData(
+        leftCount: 6,
+        rightCount: 5,
+        comparisonType: 'moreOrLess',
+      ),
+      encouragement: 'เจ๋งมาก! น้องเปรียบเทียบเก่ง! 🎯',
+    ),
+    QuestionTemplate(
+      level: 5,
+      recommendedAge: 6,
+      question: 'ข้างไหนมีมากกว่า?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 0,  // ซ้าย < ขวา
+      wrongAnswers: [1, 2],
+      data: QuestionData(
+        leftCount: 5,
+        rightCount: 6,
+        comparisonType: 'moreOrLess',
+      ),
+      encouragement: 'ยอดเยี่ยม! น้องคิดเลขเก่ง! ✨',
+    ),
+    QuestionTemplate(
+      level: 5,
+      recommendedAge: 6,
+      question: 'ทั้งสองข้างเท่ากันไหม?',
+      questionShort: 'เปรียบเทียบจำนวน',
+      correctAnswer: 1,  // เท่ากัน
+      wrongAnswers: [0, 2],
+      data: QuestionData(
+        leftCount: 5,
+        rightCount: 5,
+        comparisonType: 'equal',
+      ),
+      hint: 'นับดูสิ! เท่ากันไหม?',
+      encouragement: 'เพอร์เฟ็กต์! น้องเปรียบเทียบเก่งมาก! 🎉🎊',
+    ),
+  ];
+
+  /// ดึงคำถามทั้งหมดตาม level (1-based index)
+  static List<QuestionTemplate> getQuestionsByLevel(int level) {
+    if (level <= 0 || level > 5) {
+      return bank.where((q) => q.level == 5).toList();
+    }
+    return bank.where((q) => q.level == level).toList();
+  }
+
+  /// ดึงคำถามเดี่ยวตาม index (สำหรับ backward compatibility)
+  static QuestionTemplate getQuestion(int index) {
+    if (index <= 0 || index > bank.length) {
+      return bank.last;
+    }
+    return bank[index - 1];
+  }
+
+  /// จำนวนด่านทั้งหมด
+  static int get totalLevels => 5;
+}
