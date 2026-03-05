@@ -26,18 +26,9 @@ android {
         versionName = flutter.versionName
     }
 
-    signingConfigs {
-        create("release") {
-            storeFile = file("android/app/mathkids_adventure.keystore")
-            storePassword = System.getenv("KEYSTORE_PASSWORD") ?: "mathkids123"
-            keyAlias = System.getenv("KEY_ALIAS") ?: "mathkidskey"
-            keyPassword = System.getenv("KEY_PASSWORD") ?: "mathkids123"
-        }
-    }
-
     buildTypes {
         release {
-            signingConfig = signingConfigs.getByName("release")
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
 }
