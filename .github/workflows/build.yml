@@ -1,4 +1,4 @@
-name: Build Android APK
+name: Build & Deploy to Play Store
 
 on:
   push:
@@ -25,6 +25,14 @@ jobs:
         run: |
           echo "${{ secrets.KEYSTORE }}" | base64 --decode > android/app/mathkids_adventure.keystore
 
+      - name: Build Release AAB
+        env:
+          KEYSTORE_PATH: mathkids_adventure.keystore
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: flutter build appbundle --release
+
       - name: Build Release APK
         env:
           KEYSTORE_PATH: mathkids_adventure.keystore
@@ -33,8 +41,24 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: flutter build apk --release
 
-      - name: Upload APK
+      - name: Upload AAB Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release.aab
+          path: build/app/outputs/bundle/release/app-release.aab
+
+      - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: app-release.apk
           path: build/app/outputs/flutter-apk/app-release.apk
+
+      - name: Deploy to Play Store
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: com.mathkids.adventure
+          releaseFiles: build/app/outputs/bundle/release/app-release.aab
+          track: production
+          status: completed
