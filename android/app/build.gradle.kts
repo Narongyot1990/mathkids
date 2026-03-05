@@ -26,9 +26,19 @@ android {
         versionName = flutter.versionName
     }
 
+    signingConfigs {
+        create("release") {
+            val keystoreFile = project.property("keystoreFile") as String
+            storeFile = file(keystoreFile)
+            storePassword = project.property("keystorePassword") as String
+            keyAlias = project.property("keyAlias") as String
+            keyPassword = project.property("keyPassword") as String
+        }
+    }
+
     buildTypes {
         release {
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 }

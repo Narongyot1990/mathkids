@@ -18,9 +18,6 @@ jobs:
           flutter-version: '3.41.4'
           channel: 'stable'
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v2
-
       - name: Decode Keystore
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE }}
@@ -30,25 +27,20 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Build Release APK (unsigned)
-        run: flutter build apk --release
-
-      - name: Sign APK
+      - name: Build Release APK
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
-          apksigner sign --replace \
-            --ks android/app/mathkids_adventure.keystore \
-            --ks-pass "pass:$KEYSTORE_PASSWORD" \
-            --key-pass "pass:$KEY_PASSWORD" \
-            --ks-key-alias "$KEY_ALIAS" \
-            --out build/app/outputs/flutter-apk/app-release-signed.apk \
-            build/app/outputs/flutter-apk/app-release.apk
+          echo "keystoreFile=android/app/mathkids_adventure.keystore" >> gradle.properties
+          echo "keystorePassword=$KEYSTORE_PASSWORD" >> gradle.properties
+          echo "keyAlias=$KEY_ALIAS" >> gradle.properties
+          echo "keyPassword=$KEY_PASSWORD" >> gradle.properties
+          flutter build apk --release
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-release.apk
-          path: build/app/outputs/flutter-apk/app-release-signed.apk
+          path: build/app/outputs/flutter-apk/app-release.apk
