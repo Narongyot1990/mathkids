@@ -3,6 +3,9 @@
   "outputDirectory": "build/web",
   "installCommand": "echo 'Skip install'",
   "framework": null,
+  "rewrites": [
+    { "source": "/privacy", "destination": "/privacy.html" }
+  ],
   "routes": [
     {
       "handle": "filesystem"
