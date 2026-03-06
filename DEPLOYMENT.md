@@ -34,7 +34,7 @@
 | **Keystore File** | `D:\projects\java\apps\mathkids_adventure\android\app\mathkids_adventure.keystore` |
 | **Keystore Base64 (clean)** | `D:\projects\AndroidStudio\keystore_base64_clean.txt` |
 | **Keystore Base64 (old, has headers — DO NOT USE)** | `D:\projects\AndroidStudio\keystore_base64.txt` |
-| **Service Account JSON** | `D:\DATA\Narongyot.B\Downloads\play-store-deploy-489313-0404103a731b.json` |
+| **Service Account JSON** | `D:\DATA\Narongyot.B\Downloads\play-store-deploy-489313-24000124094d.json` |
 
 ### Keystore Credentials
 
@@ -142,10 +142,12 @@ buildTypes {
 
 | Item | Value |
 |------|-------|
-| **Project ID** | `766818979478` (play-store-deploy-489313) |
+| **Project ID** | `play-store-deploy-489313` |
+| **Project Number** | `766818979478` |
 | **Service Account** | `play-store-deploy` |
+| **Service Account Email** | `play-store-deploy@play-store-deploy-489313.iam.gserviceaccount.com` |
 | **API Enabled** | Google Play Android Developer API (`androidpublisher.googleapis.com`) |
-| **Key File** | `D:\DATA\Narongyot.B\Downloads\play-store-deploy-489313-0404103a731b.json` |
+| **Key File** | `D:\DATA\Narongyot.B\Downloads\play-store-deploy-489313-24000124094d.json` |
 
 ### Play Console Permissions
 
@@ -305,40 +307,197 @@ version: 1.0.1+2   # versionName + versionCode
 
 ---
 
-## 11. CRITICAL — Remaining Issue: Service Account Permission
+## 11. CRITICAL — Service Account & API Access Setup
 
-The auto-deploy step (`Deploy to Play Store`) fails with **`The caller does not have permission`**.
+The auto-deploy step (`Deploy to Play Store`) fails with **`The caller does not have permission`** or API access doesn't show up in Play Console.
 
-**Root Cause**: The Service Account `play-store-deploy` has NOT been granted the correct permissions in Google Play Console at the **app level**.
+### Root Causes
 
-### Fix Steps (must be done on Play Console web):
+1. **Google Play Android Developer API is NOT enabled** in Google Cloud Platform (GCP)
+2. **Service Account is NOT linked** to Play Console
+3. **Service Account lacks App Permissions** in Play Console
 
-1. Go to **https://play.google.com/console**
-2. Click **Settings** (gear icon, left sidebar) → **Users and permissions**
-3. Find the service account email (looks like `play-store-deploy@play-store-deploy-489313.iam.gserviceaccount.com`)
-   - If it's NOT listed: Go to **Settings → API access** → scroll to **Service accounts** → click **"Grant access"** next to `play-store-deploy`
-4. Click on the service account → **App permissions** tab
-5. Click **"Add app"** → select **MathKids Adventure** → **Apply**
-6. Grant these permissions:
-   - ✅ **Releases** (Create, edit, and roll out releases)
-   - ✅ **Store presence** (Edit store listing, pricing & distribution)
-7. Click **"Invite user"** → **"Send invite"**
+---
 
-### After fixing permissions:
+### Step 1: Enable API in Google Cloud Platform (GCP)
 
+1. Go to **Google Cloud Console**: https://console.cloud.google.com
+2. Select Project: `play-store-deploy-489313` (or Project ID: `766818979478`)
+3. Go to **APIs & Services → Library**
+4. Search for **"Google Play Android Developer API"**
+5. Click on it → If not enabled, click **Enable**
+
+**Direct Link**: https://console.cloud.google.com/apis/api/androidpublisher.googleapis.com
+
+---
+
+### Step 2: Verify/Create Service Account in GCP
+
+1. Go to **IAM & Admin → Service Accounts**: https://console.cloud.google.com/iam-admin/serviceaccounts
+2. Check if `play-store-deploy@play-store-deploy-489313.iam.gserviceaccount.com` exists
+
+**If NOT exists, create new:**
+1. Click **+ CREATE SERVICE ACCOUNT**
+2. Service account name: `play-store-deploy`
+3. Service account ID: `play-store-deploy` (auto-generated)
+4. Description: `Service account for Play Store deployment`
+5. Click **CREATE AND CONTINUE**
+6. Grant role: **Project → Editor** (or **Play Store → Play Publishing Admin**)
+7. Click **DONE**
+8. Click on the created service account → **Keys tab** → **ADD KEY** → **Create new key** → **JSON** → **CREATE**
+9. Download and save the JSON file securely
+
+---
+
+### Step 3: Link GCP Project to Play Console
+
+1. Go to **Play Console**: https://play.google.com/console
+2. Select App: **MathKids Adventure**
+3. Click **Settings (gear icon)** → **API access**
+4. If no GCP project linked:
+   - Click **Link a Google Cloud project**
+   - Select project: `play-store-deploy-489313`
+   - Click **Link project**
+5. After linking, you should see the service account listed
+
+---
+
+### Step 4: Grant Service Account Permissions
+
+**If service account shows in API access page:**
+1. Click **Grant access** next to the service account
+2. In the permissions dialog:
+   - Go to **App permissions** tab
+   - Click **Add app** → Select **MathKids Adventure** → Click **Apply**
+   - Grant these permissions:
+     - ✅ **Releases** (Create, edit, and roll out releases)
+     - ✅ **Store presence** (Edit store listing, pricing & distribution)
+   - Go to **Users and permissions** tab
+   - Make sure the service account is listed with appropriate access
+3. Click **Apply**
+
+**If service account does NOT show:**
+- Make sure you completed Step 1 (Enable API) and Step 2 (Create Service Account in GCP)
+- Refresh the page and try again
+- The service account email format: `play-store-deploy@play-store-deploy-489313.iam.gserviceaccount.com`
+
+---
+
+### Step 5: Wait for Propagation
+
+⚠️ **IMPORTANT**: After granting permissions, wait **15-30 minutes** before testing the API. Google needs time to propagate the permissions across their systems.
+
+---
+
+### Step 6: Update GitHub Secrets (if needed)
+
+If you created a NEW service account with a NEW JSON key:
+
+1. Get the new JSON file content (single line, no headers):
 ```powershell
-# Re-run the failed workflow
-$ghExe = "$env:TEMP\gh_cli\bin\gh.exe"
-& $ghExe run rerun <LATEST_RUN_ID> --repo Narongyot1990/mathkids --failed
+Get-Content "path\to\new\service-account-key.json" -Raw | Set-Content "temp.json"
+(Get-Content "temp.json" -Raw).Trim() | Set-Content "service_account_clean.json"
+# Then set as secret
 ```
 
-Or simply push any commit to `main` to trigger a new build.
+2. Update the secret in GitHub:
+```powershell
+$ghExe = "$env:TEMP\gh_cli\bin\gh.exe"
+Get-Content "service_account_clean.json" -Raw | gh secret set GOOGLE_PLAY_SERVICE_ACCOUNT_JSON --repo Narongyot1990/mathkids
+```
 
-### If deploy still fails:
+---
 
-- Wait 15-30 minutes after granting permissions (Google propagation delay)
-- Try changing track from `internal` to `alpha` in `build.yml`
-- Check that the first AAB was uploaded manually to the **Internal testing** track (not just draft)
+### Step 7: Test Deployment
+
+After waiting 15-30 minutes, trigger a new build:
+
+```powershell
+# Push a commit to trigger new build
+git add .
+git commit -m "chore: test deployment after API setup"
+git push origin main
+```
+
+Or re-run existing workflow:
+```powershell
+$ghExe = "$env:TEMP\gh_cli\bin\gh.exe"
+& $ghExe run list --repo Narongyot1990/mathkids --limit 3
+# Find the latest run ID and re-run if needed
+```
+
+---
+
+### Troubleshooting
+
+| Problem | Solution |
+|---------|----------|
+| API access menu not visible in Play Console | Make sure you're using a **Owner** or **Admin** account, not just a viewer |
+| Service account not showing in API access | Ensure GCP project is linked first (Step 3) |
+| Still getting "caller does not have permission" | Wait 15-30 minutes, then try again |
+| Deploy fails with "Package not found" | You must upload first AAB manually via Play Console web UI |
+| Error: "Google Play Android Developer API not enabled" | Go to GCP and enable it (Step 1) |
+
+---
+
+### Quick Reference Links
+
+| Resource | URL |
+|----------|-----|
+| Google Cloud Console | https://console.cloud.google.com |
+| GCP APIs Library | https://console.cloud.google.com/apis/library |
+| Google Play API (enable) | https://console.cloud.google.com/apis/api/androidpublisher.googleapis.com |
+| GCP Service Accounts | https://console.cloud.google.com/iam-admin/serviceaccounts |
+| Play Console | https://play.google.com/console |
+| Play Console API Access | https://play.google.com/console/apps/details?pkg=com.mathkids.adventure#&tab=apiaccess |
+
+---
+
+## 12. CLI Access Options
+
+### Google Cloud CLI (gcloud)
+
+You CAN use `gcloud` CLI to manage GCP resources, but Play Console permissions MUST be done via Web UI.
+
+**Install gcloud**: https://cloud.google.com/sdk/docs/install
+
+**Useful commands:**
+
+```powershell
+# Login
+gcloud auth login
+
+# Set project
+gcloud config set project play-store-deploy-489313
+
+# Enable Google Play API
+gcloud services enable androidpublisher.googleapis.com
+
+# Check if API is enabled
+gcloud services list --enabled
+
+# Create service account
+gcloud iam service-accounts create play-store-deploy --display-name="Play Store Deploy"
+
+# Create service account key
+gcloud iam service-accounts keys create key.json --iam-account=play-store-deploy@play-store-deploy-489313.iam.gserviceaccount.com
+
+# List service accounts
+gcloud iam service-accounts list
+```
+
+### What MUST be done via Web UI
+
+| Task | CLI Possible? | Must Use Web UI? |
+|------|---------------|------------------|
+| Enable Google Play API | ✅ Yes (`gcloud`) | Optional |
+| Create Service Account | ✅ Yes (`gcloud`) | Optional |
+| Create Service Account Key | ✅ Yes (`gcloud`) | Optional |
+| Link GCP to Play Console | ❌ No | ✅ Yes |
+| Grant App Permissions | ❌ No | ✅ Yes |
+| First AAB Upload | ❌ No | ✅ Yes |
+
+**Summary**: You can use `gcloud` CLI for GCP tasks, but linking Play Console and granting permissions MUST be done through the Play Console web interface.
 
 ---
 
