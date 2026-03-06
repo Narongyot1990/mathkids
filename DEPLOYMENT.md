@@ -305,9 +305,46 @@ version: 1.0.1+2   # versionName + versionCode
 
 ---
 
-## 11. Next Steps / TODO
+## 11. CRITICAL — Remaining Issue: Service Account Permission
 
-- [ ] **Verify auto-deploy works** — after first manual AAB upload, re-run workflow to confirm `Deploy to Play Store` step passes
+The auto-deploy step (`Deploy to Play Store`) fails with **`The caller does not have permission`**.
+
+**Root Cause**: The Service Account `play-store-deploy` has NOT been granted the correct permissions in Google Play Console at the **app level**.
+
+### Fix Steps (must be done on Play Console web):
+
+1. Go to **https://play.google.com/console**
+2. Click **Settings** (gear icon, left sidebar) → **Users and permissions**
+3. Find the service account email (looks like `play-store-deploy@play-store-deploy-489313.iam.gserviceaccount.com`)
+   - If it's NOT listed: Go to **Settings → API access** → scroll to **Service accounts** → click **"Grant access"** next to `play-store-deploy`
+4. Click on the service account → **App permissions** tab
+5. Click **"Add app"** → select **MathKids Adventure** → **Apply**
+6. Grant these permissions:
+   - ✅ **Releases** (Create, edit, and roll out releases)
+   - ✅ **Store presence** (Edit store listing, pricing & distribution)
+7. Click **"Invite user"** → **"Send invite"**
+
+### After fixing permissions:
+
+```powershell
+# Re-run the failed workflow
+$ghExe = "$env:TEMP\gh_cli\bin\gh.exe"
+& $ghExe run rerun <LATEST_RUN_ID> --repo Narongyot1990/mathkids --failed
+```
+
+Or simply push any commit to `main` to trigger a new build.
+
+### If deploy still fails:
+
+- Wait 15-30 minutes after granting permissions (Google propagation delay)
+- Try changing track from `internal` to `alpha` in `build.yml`
+- Check that the first AAB was uploaded manually to the **Internal testing** track (not just draft)
+
+---
+
+## 12. Next Steps / TODO
+
+- [ ] **Fix Service Account permission** — follow Section 11 above, then re-run workflow
 - [ ] **Complete Play Store listing** — fill in store listing (description, screenshots, content rating, privacy policy) in Play Console
 - [ ] **Consider changing deploy track** — use `internal` testing first, then promote to `production` after Play Store review
 - [ ] **Version bumping** — increment `versionCode` in `pubspec.yaml` before each release
