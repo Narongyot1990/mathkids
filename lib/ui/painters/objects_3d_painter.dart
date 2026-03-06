@@ -242,6 +242,7 @@ class Mascot3D extends StatefulWidget {
   final double x;
   final double y;
   final double rotationY;
+  final double size;
 
   const Mascot3D({
     super.key,
@@ -249,6 +250,7 @@ class Mascot3D extends StatefulWidget {
     required this.x,
     required this.y,
     this.rotationY = 0,
+    this.size = 50.0,
   });
 
   @override
@@ -277,11 +279,12 @@ class _Mascot3DState extends State<Mascot3D>
   @override
   Widget build(BuildContext context) {
     final offsetX = widget.rotationY * 30;
+    final bounceAmplitude = widget.size * 0.1;
 
     return AnimatedBuilder(
       animation: _bounceController,
       builder: (context, child) {
-        final bounceY = sin(_bounceController.value * pi) * 5;
+        final bounceY = sin(_bounceController.value * pi) * bounceAmplitude;
         
         return Positioned(
           left: widget.x + offsetX,
@@ -290,7 +293,7 @@ class _Mascot3DState extends State<Mascot3D>
             scale: 1 + (_bounceController.value * 0.1),
             child: Text(
               widget.mascot,
-              style: const TextStyle(fontSize: 50),
+              style: TextStyle(fontSize: widget.size),
             ),
           ),
         );

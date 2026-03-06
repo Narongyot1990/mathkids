@@ -21,79 +21,177 @@ class SubtractionGameWidget extends BaseGameWidget {
     final operand1 = question.operand1 ?? 0;
     final operand2 = question.operand2 ?? 0;
     
-    // Get responsive size
+    // Get responsive sizes
     final gameSize = ResponsiveHelper.gameWidgetSize(context, aspectRatio: 16 / 9);
     final fontSize = ResponsiveHelper.fontSize(context, 12);
+    final isMobile = ResponsiveHelper.isMobile(context);
+    final isTablet = ResponsiveHelper.isTablet(context);
+
+    // Calculate mascot position based on screen size
+    final mascotX = isMobile 
+        ? gameSize.width - 50 
+        : isTablet 
+            ? gameSize.width - 70 
+            : gameSize.width - 90;
+    final mascotY = isMobile ? 5.0 : 10.0;
+
+    // Enhanced gradient for subtraction - warmer tones
+    final gradientColors = isCorrect == true
+        ? [Colors.green.shade100, Colors.teal.shade100]
+        : isCorrect == false
+            ? [Colors.red.shade50, Colors.amber.shade50]
+            : [Colors.orange.shade50, Colors.red.shade50];
 
     return Game3DWidget(
-      autoRotate: true,
-      enableRotation: true,
-      child: Container(
+      autoRotate: isMobile ? false : true,
+      enableRotation: !isMobile,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
         width: gameSize.width,
         height: gameSize.height,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Colors.orange.shade50,
-              Colors.red.shade50,
-            ],
+            colors: gradientColors,
           ),
         ),
         child: Stack(
           children: [
-            MathOperation3DPainter(
-              operation: '-',
-              operand1: operand1,
-              operand2: operand2,
-              correctAnswer: question.correctAnswer,
-              showResult: isCorrect != null,
+            // Main math operation display
+            Center(
+              child: MathOperation3DPainter(
+                operation: '-',
+                operand1: operand1,
+                operand2: operand2,
+                correctAnswer: question.correctAnswer,
+                showResult: isCorrect != null,
+              ),
             ),
-            Mascot3DOperator(
-              mascot: '🐨',
-              x: gameSize.width - 60,
-              y: gameSize.height - 80,
+            
+            // Animated mascot with better positioning
+            AnimatedPositioned(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeOutBack,
+              right: isMobile ? 8 : 15,
+              top: mascotY,
+              child: Mascot3DOperator(
+                mascot: '🐨',
+                x: mascotX,
+                y: mascotY,
+                size: isMobile ? 35.0 : isTablet ? 40.0 : 50.0,
+              ),
             ),
-            Positioned(
-              bottom: 8,
-              left: 0,
-              right: 0,
-              child: Center(
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: fontSize * 1.2,
-                    vertical: fontSize * 0.4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    'ลากเพื่อหมุน 🔄',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[600],
+            
+            // Group labels for better understanding
+            if (!isMobile) ...[
+              Positioned(
+                left: 20,
+                top: gameSize.height * 0.15,
+                child: _buildGroupLabel('-$operand1', Colors.orange.shade700),
+              ),
+            ],
+            
+            // Hint text - hidden on mobile to save space
+            if (!isMobile)
+              Positioned(
+                bottom: 8,
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: fontSize * 1.2,
+                      vertical: fontSize * 0.4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(fontSize),
+                    ),
+                    child: Text(
+                      'ลากเพื่อหมุน 🔄',
+                      style: TextStyle(
+                        fontSize: fontSize,
+                        color: Colors.grey[600],
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
+              
+            // Result feedback animation
+            if (isCorrect != null)
+              Positioned.fill(
+                child: _buildFeedbackOverlay(isCorrect!),
+              ),
           ],
         ),
       ),
     );
   }
 
+  Widget _buildGroupLabel(String text, Color color) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0, end: 1),
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.elasticOut,
+      builder: (context, value, child) {
+        return Transform.scale(
+          scale: value,
+          child: Opacity(
+            opacity: value,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: color.withValues(alpha: 0.3)),
+              ),
+              child: Text(
+                text,
+                style: TextStyle(
+                  color: color,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildFeedbackOverlay(bool isCorrect) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0, end: 1),
+      duration: const Duration(milliseconds: 600),
+      curve: Curves.elasticOut,
+      builder: (context, value, child) {
+        return Container(
+          color: isCorrect 
+              ? Colors.green.withValues(alpha: 0.1 * value)
+              : Colors.red.withValues(alpha: 0.1 * value),
+        );
+      },
+    );
+  }
+
   @override
   Widget buildAnswerOptions(BuildContext context) {
-    return ModernAnswerButtonGrid(
-      options: question.options,
-      correctAnswer: question.correctAnswer,
-      isCorrect: isCorrect,
-      isProcessing: isProcessingAnswer,
-      onAnswer: onAnswer,
-      gameType: gameType,
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 300),
+      child: ModernAnswerButtonGrid(
+        key: ValueKey(question.questionText),
+        options: question.options,
+        correctAnswer: question.correctAnswer,
+        isCorrect: isCorrect,
+        isProcessing: isProcessingAnswer,
+        onAnswer: onAnswer,
+        gameType: gameType,
+      ),
     );
   }
 }
