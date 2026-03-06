@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/utils/responsive_helper.dart';
 import '../../../ui/painters/comparison_painter.dart';
 import '../../../widgets/modern_answer_button.dart';
 import '../../../widgets/game_3d_widget.dart';
@@ -19,13 +20,17 @@ class ComparisonGameWidget extends BaseGameWidget {
   Widget buildQuestionDisplay(BuildContext context) {
     final leftCount = question.leftCount ?? 0;
     final rightCount = question.rightCount ?? 0;
+    
+    // Get responsive size (comparison needs taller aspect ratio)
+    final gameSize = ResponsiveHelper.gameWidgetSize(context, aspectRatio: 4 / 3);
+    final fontSize = ResponsiveHelper.fontSize(context, 12);
 
     return Game3DWidget(
       autoRotate: true,
       enableRotation: true,
       child: Container(
-        width: 400,
-        height: 280,
+        width: gameSize.width,
+        height: gameSize.height,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
@@ -39,7 +44,7 @@ class ComparisonGameWidget extends BaseGameWidget {
         child: Stack(
           children: [
             CustomPaint(
-              size: const Size(400, 280),
+              size: Size(gameSize.width, gameSize.height),
               painter: ComparisonPainter(
                 leftCount: leftCount,
                 rightCount: rightCount,
@@ -51,10 +56,13 @@ class ComparisonGameWidget extends BaseGameWidget {
               right: 0,
               child: Center(
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: fontSize * 1.2,
+                    vertical: fontSize * 0.4,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.black.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(fontSize),
                   ),
                   child: Text(
                     'ลากเพื่อหมุน 🔄',

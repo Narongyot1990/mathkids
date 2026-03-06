@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/app_typography.dart';
+import '../../../core/utils/responsive_helper.dart';
 import '../../../widgets/modern_answer_button.dart';
 import '../../../widgets/game_3d_widget.dart';
 import 'base_game_widget.dart';
@@ -20,14 +21,16 @@ class SequenceGameWidget extends BaseGameWidget {
   Widget buildQuestionDisplay(BuildContext context) {
     final sequence = question.sequence ?? [];
 
-    final boxSize = 55.0;
-    final fontSize = 24.0;
+    // Responsive sizing
+    final iconSize = ResponsiveHelper.iconSize(context);
+    final fontSize = iconSize * 0.5; // Font is 50% of icon size
+    final boxSize = iconSize * 1.1;
 
     return Game3DWidget(
       autoRotate: true,
       enableRotation: true,
       child: Container(
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.all(iconSize * 0.4),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
@@ -49,7 +52,7 @@ class SequenceGameWidget extends BaseGameWidget {
                     for (int i = 0; i < sequence.length; i++) ...[
                       _buildNumberBox(sequence[i], boxSize, fontSize, i),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        padding: EdgeInsets.symmetric(horizontal: fontSize * 0.2),
                         child: Icon(
                           Icons.arrow_forward,
                           size: boxSize * 0.4,

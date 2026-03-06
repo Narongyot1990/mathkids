@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/utils/responsive_helper.dart';
 
 /// Math Grid (Crossword) Game Widget
 /// Displays a 5x5 crossword grid with drag-and-drop answer slots
@@ -108,9 +109,22 @@ class _MathGridWidgetState extends State<MathGridWidget> {
 
     // คำนวณขนาดช่องให้พอดีหน้าจอ (responsive)
     final screenWidth = MediaQuery.of(context).size.width;
-    final cellSize = ((screenWidth - 80) / 5).clamp(45.0, 60.0); // ลดจาก 60 เป็น 45-60
+    final isTablet = ResponsiveHelper.isTablet(context);
+    final isDesktop = ResponsiveHelper.isDesktop(context);
+    
+    // Base cell size - larger for tablet/desktop
+    double baseCellSize;
+    if (isDesktop) {
+      baseCellSize = 80.0;
+    } else if (isTablet) {
+      baseCellSize = 65.0;
+    } else {
+      baseCellSize = 55.0;
+    }
+    
+    final cellSize = ((screenWidth - 80) / 5).clamp(baseCellSize * 0.7, baseCellSize);
     final cellPadding = (cellSize * 0.06).clamp(2.0, 5.0); // padding ตามขนาดช่อง
-    final fontSize = (cellSize * 0.5).clamp(22.0, 30.0); // ขนาดตัวอักษรตามขนาดช่อง
+    final fontSize = (cellSize * 0.5).clamp(22.0, isTablet ? 38.0 : 30.0); // ขนาดตัวอักษรตามขนาดช่อง
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16), // ลด padding

@@ -1,11 +1,42 @@
 import 'package:flutter/material.dart';
 
+/// Device Types for Responsive Design
+enum DeviceType {
+  mobile,   // < 600px
+  tablet,   // 600px - 1024px
+  desktop,  // > 1024px
+}
+
 /// App Sizes System - Design Token System
 ///
 /// ระบบขนาดต่างๆ (Border Radius, Elevation, Icon Size, etc.)
 /// ใช้ทั่วทั้งแอพเพื่อความสม่ำเสมอ
 class AppSizes {
   AppSizes._(); // Private constructor
+
+  // ========================================
+  // Device Type Detection
+  // ========================================
+
+  /// Get device type based on screen width
+  static DeviceType getDeviceType(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    if (width < 600) return DeviceType.mobile;
+    if (width < 1024) return DeviceType.tablet;
+    return DeviceType.desktop;
+  }
+
+  /// Check if current device is mobile
+  static bool isMobile(BuildContext context) => 
+      getDeviceType(context) == DeviceType.mobile;
+
+  /// Check if current device is tablet
+  static bool isTablet(BuildContext context) => 
+      getDeviceType(context) == DeviceType.tablet;
+
+  /// Check if current device is desktop
+  static bool isDesktop(BuildContext context) => 
+      getDeviceType(context) == DeviceType.desktop;
 
   // ========================================
   // Border Radius (มุมโค้ง)
@@ -139,13 +170,29 @@ class AppSizes {
   }
 
   // ========================================
-  // Responsive Scaling System - iPhone optimized
+  // Responsive Scaling System - Mobile, Tablet, Desktop
   // ========================================
 
   /// Get scale factor based on screen size (iPhone 13 = 1.0)
   static double getScaleFactor(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+    final deviceType = getDeviceType(context);
 
+    // Tablet support - 50-100% larger
+    if (deviceType == DeviceType.tablet) {
+      if (width >= 1024) return 1.8;  // Large tablet (iPad Pro 10")
+      if (width >= 768) return 1.5;   // Small tablet (iPad Mini)
+      return 1.3;  // Medium tablet
+    }
+
+    // Desktop support - 100-150% larger
+    if (deviceType == DeviceType.desktop) {
+      if (width >= 1920) return 2.5;  // Large desktop
+      if (width >= 1440) return 2.2;  // Desktop
+      return 2.0;  // Small desktop
+    }
+
+    // Mobile support - original logic
     // Base: iPhone 13 (390px)
     if (width <= 375) {
       // iPhone 13 Mini, SE
@@ -157,7 +204,7 @@ class AppSizes {
       // iPhone 13/14/15 Pro Max
       return 1.08;
     } else {
-      // iPhone 17 Pro Max and larger
+      // Large phones
       return 1.12;
     }
   }
@@ -165,6 +212,92 @@ class AppSizes {
   /// Scale size responsively based on device
   static double scale(BuildContext context, double baseSize) {
     return baseSize * getScaleFactor(context);
+  }
+
+  /// Get font scale factor (fonts scale less than UI elements)
+  static double getFontScaleFactor(BuildContext context) {
+    final scaleFactor = getScaleFactor(context);
+    // Font scales 50% less than UI
+    return 1.0 + (scaleFactor - 1.0) * 0.5;
+  }
+
+  /// Scale font size responsively
+  static double scaleFont(BuildContext context, double baseSize) {
+    return baseSize * getFontScaleFactor(context);
+  }
+
+  /// Get button size based on device type
+  static double getButtonHeight(BuildContext context) {
+    final deviceType = getDeviceType(context);
+    switch (deviceType) {
+      case DeviceType.mobile:
+        return buttonHeightMedium; // 48px
+      case DeviceType.tablet:
+        return buttonHeightLarge; // 56px
+      case DeviceType.desktop:
+        return buttonHeightXLarge; // 64px
+    }
+  }
+
+  /// Get button width based on device type
+  static double getButtonWidth(BuildContext context) {
+    final deviceType = getDeviceType(context);
+    switch (deviceType) {
+      case DeviceType.mobile:
+        return buttonWidthMedium; // 120px
+      case DeviceType.tablet:
+        return buttonWidthLarge; // 160px
+      case DeviceType.desktop:
+        return buttonWidthLarge * 1.5; // 240px
+    }
+  }
+
+  /// Get icon size based on device type
+  static double getIconSize(BuildContext context) {
+    final deviceType = getDeviceType(context);
+    switch (deviceType) {
+      case DeviceType.mobile:
+        return iconLg; // 32px
+      case DeviceType.tablet:
+        return iconXl; // 48px
+      case DeviceType.desktop:
+        return iconXxl; // 64px
+    }
+  }
+
+  /// Get game widget size based on device type
+  static Size getGameWidgetSize(BuildContext context, {double aspectRatio = 16 / 9}) {
+    final deviceType = getDeviceType(context);
+    final screenSize = MediaQuery.of(context).size;
+    
+    double maxWidth;
+    double maxHeight;
+    
+    switch (deviceType) {
+      case DeviceType.mobile:
+        maxWidth = screenSize.width * 0.9;
+        maxHeight = screenSize.height * 0.5;
+        break;
+      case DeviceType.tablet:
+        maxWidth = screenSize.width * 0.7;
+        maxHeight = screenSize.height * 0.6;
+        break;
+      case DeviceType.desktop:
+        maxWidth = 800;
+        maxHeight = 500;
+        break;
+    }
+    
+    // Maintain aspect ratio
+    double width = maxWidth;
+    double height = width / aspectRatio;
+    
+    if (height > maxHeight) {
+      height = maxHeight;
+      width = height * aspectRatio;
+    }
+    
+    return Size(width, height);
   }
 
   /// Scale font size responsively
