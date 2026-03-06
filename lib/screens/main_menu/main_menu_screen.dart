@@ -3,6 +3,7 @@ import '../../widgets/kid_button.dart';
 import '../../widgets/playful_background.dart';
 import '../level_select/level_select_screen.dart';
 import '../ai_math_solver/ai_math_solver_screen.dart';
+import '../settings/settings_screen.dart';
 import '../../services/audio/audio_manager.dart';
 import '../../services/audio/audio_context.dart';
 import '../../core/theme/app_colors.dart';
@@ -125,8 +126,17 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                   text: 'ตั้งค่า',
                   icon: Icons.settings,
                   backgroundColor: Theme.of(context).colorScheme.secondary,
-                  onPressed: () {
+                  onPressed: () async {
                     audioManager.playButtonClick();
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const SettingsScreen(),
+                      ),
+                    );
+                    if (mounted) {
+                      setState(() {});
+                    }
                   },
                 ),
               ],
