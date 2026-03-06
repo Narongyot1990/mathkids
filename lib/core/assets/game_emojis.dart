@@ -180,6 +180,8 @@ class _GameTypeEmojis {
   const _GameTypeEmojis();
 
   final String counting = '🔢';
+  final String addition = '➕';
+  final String subtraction = '➖';
   final String comparison = '⚖️';
   final String sequence = '🔄';
   final String mathGrid = '🎯';
