@@ -7,8 +7,6 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_typography.dart';
 import 'widgets/counting_game_widget.dart';
-import 'widgets/addition_game_widget.dart';
-import 'widgets/subtraction_game_widget.dart';
 import 'widgets/comparison_game_widget.dart';
 import 'widgets/sequence_game_widget.dart';
 import 'widgets/math_grid_game_widget.dart';
@@ -109,10 +107,6 @@ class _GameScreenState extends State<GameScreen> {
     switch (widget.gameType) {
       case GameType.counting:
         return AppColors.countingGameBackground;
-      case GameType.addition:
-        return AppColors.additionGameBackground;
-      case GameType.subtraction:
-        return AppColors.subtractionGameBackground;
       case GameType.comparison:
         return AppColors.comparisonGameBackground;
       case GameType.sequence:
@@ -224,26 +218,6 @@ class _GameScreenState extends State<GameScreen> {
     switch (widget.gameType) {
       case GameType.counting:
         return CountingGameWidget(
-          question: game.currentQuestion!,
-          gameType: widget.gameType,
-          difficulty: Difficulty.easy,
-          isCorrect: game.isCorrect,
-          isProcessingAnswer: _isProcessingAnswer,
-          onAnswer: handleAnswer,
-        );
-
-      case GameType.addition:
-        return AdditionGameWidget(
-          question: game.currentQuestion!,
-          gameType: widget.gameType,
-          difficulty: Difficulty.easy,
-          isCorrect: game.isCorrect,
-          isProcessingAnswer: _isProcessingAnswer,
-          onAnswer: handleAnswer,
-        );
-
-      case GameType.subtraction:
-        return SubtractionGameWidget(
           question: game.currentQuestion!,
           gameType: widget.gameType,
           difficulty: Difficulty.easy,

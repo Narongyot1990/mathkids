@@ -9,9 +9,7 @@ library;
 import '../models/game_type.dart';
 import '../models/question.dart';
 import 'question_config.dart';
-import 'addition_questions.dart';
 import 'counting_questions.dart';
-import 'subtraction_questions.dart';
 import 'comparison_questions.dart';
 import 'sequence_questions.dart';
 
@@ -30,17 +28,13 @@ class QuestionBank {
     switch (gameType) {
       case GameType.counting:
         return CountingQuestions.getQuestion(level);
-      case GameType.addition:
-        return AdditionQuestions.getQuestion(level);
-      case GameType.subtraction:
-        return SubtractionQuestions.getQuestion(level);
       case GameType.comparison:
         return ComparisonQuestions.getQuestion(level);
       case GameType.sequence:
         return SequenceQuestions.getQuestion(level);
       case GameType.mathGrid:
         // TODO: สร้าง MathGridQuestions (ยังไม่ได้ใช้ในระบบ 5 เกม)
-        return AdditionQuestions.getQuestion(level);
+        return CountingQuestions.getQuestion(level);
     }
   }
 
@@ -73,10 +67,6 @@ class QuestionBank {
     switch (gameType) {
       case GameType.counting:
         return CountingQuestions.totalLevels;
-      case GameType.addition:
-        return AdditionQuestions.totalLevels;
-      case GameType.subtraction:
-        return SubtractionQuestions.totalLevels;
       case GameType.comparison:
         return ComparisonQuestions.totalLevels;
       case GameType.sequence:
@@ -91,10 +81,6 @@ class QuestionBank {
     switch (gameType) {
       case GameType.counting:
         return CountingQuestions.bank;
-      case GameType.addition:
-        return AdditionQuestions.bank;
-      case GameType.subtraction:
-        return SubtractionQuestions.bank;
       case GameType.comparison:
         return ComparisonQuestions.bank;
       case GameType.sequence:
