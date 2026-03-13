@@ -5,48 +5,29 @@ name: Build and Deploy
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.24.0'
-          channel: 'stable'
 
       - name: Install dependencies
-        run: |
-          flutter pub get
+        run: flutter pub get
 
-      - name: Build Web
-        run: |
-          flutter build web --release
-
-      - name: Setup Vercel
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          vercel-args: '--prod'
+      - name: Build Flutter Web
+        run: flutter build web --release
 
       - name: Deploy to Vercel
-        if: github.ref == 'refs/heads/main'
-        run: |
-          echo "Deploying to production..."
-          npx vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
-
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
+        uses: BetaHuhn/deploy-to-vercel-action@v1
         with:
-          name: web-build
-          path: build/web/
-          retention-days: 7
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_PROJECT: mathkids
+          VERCEL_ORG: narongyot1990s-projects
+          VERCEL_ARGS: '--prod'
