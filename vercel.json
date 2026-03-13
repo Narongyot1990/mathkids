@@ -1,8 +1,8 @@
 {
-  "buildCommand": "echo 'Using pre-built files'",
+  "buildCommand": "flutter build web --release",
+  "installCommand": "flutter pub get",
   "outputDirectory": "build/web",
-  "installCommand": "echo 'Skip install'",
-  "framework": null,
+  "framework": "flutter",
   "routes": [
     {
       "src": "/privacy",
