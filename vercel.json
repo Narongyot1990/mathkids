@@ -1,6 +1,5 @@
 {
   "buildCommand": "flutter pub get && flutter build web --release",
   "installCommand": "flutter pub get",
-  "outputDirectory": "build/web",
-  "framework": "flutter"
+  "outputDirectory": "build/web"
 }
