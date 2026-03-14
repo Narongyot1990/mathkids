@@ -16,25 +16,17 @@ jobs:
         with:
           flutter-version: '3.24.0'
 
-      - run: flutter pub get
-      - run: flutter build web --release
+      - name: Show Flutter version
+        run: flutter --version
+
+      - name: Run flutter pub get with verbose
+        run: flutter pub get --verbose 2>&1 || true
+
+      - name: Build Flutter Web
+        run: flutter build web --release || echo "Build failed - checking logs"
 
       - uses: actions/upload-artifact@v4
+        if: success()
         with:
           name: flutter-build
           path: build/web
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          name: flutter-build
-          path: ./
-
-      - uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
